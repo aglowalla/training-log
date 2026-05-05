@@ -1,0 +1,730 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 2 — Week 8</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #f5f2ee;
+    color: #1a1a1a;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    padding: 28px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .header {
+    border-bottom: 2px solid #1a1a1a;
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+  }
+
+  .phase-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: #b07d3a;
+    margin-bottom: 4px;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 38px;
+    letter-spacing: 2px;
+    line-height: 1;
+    color: #1a1a1a;
+  }
+
+  .subtitle {
+    font-size: 12px;
+    color: #888;
+    margin-top: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .tab {
+    padding: 7px 14px;
+    border: 1px solid #ccc;
+    background: #fff;
+    color: #888;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+    border-radius: 2px;
+  }
+
+  .tab:hover { border-color: #b07d3a; color: #b07d3a; }
+
+  .tab.active {
+    background: #b07d3a;
+    border-color: #b07d3a;
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .day-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+
+  .day-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 2px;
+    color: #1a1a1a;
+  }
+
+  .day-focus {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #b07d3a;
+  }
+
+  .core-badge {
+    display: inline-block;
+    background: #eaf4ea;
+    border: 1px solid #a0c8a0;
+    color: #3a7a3a;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 2px;
+  }
+
+  .exercise-card {
+    background: #fff;
+    border: 1px solid #e0dbd4;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+
+  .exercise-card.core-card {
+    background: #f4faf4;
+    border-color: #b8d8b8;
+  }
+
+  .exercise-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .ex-left { flex: 1; min-width: 0; }
+
+  .ex-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1a1a1a;
+    margin-bottom: 2px;
+  }
+
+  .core-card .ex-name { color: #2a5a2a; }
+
+  .ex-prescription {
+    font-size: 11px;
+    color: #b07d3a;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 1px;
+  }
+
+  .ex-note {
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+    font-style: italic;
+  }
+
+  .prior-week {
+    text-align: right;
+    font-size: 11px;
+    flex-shrink: 0;
+    min-width: 80px;
+  }
+
+  .prior-label {
+    color: #aaa;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  .prior-value { color: #555; }
+
+  .toggle-btn {
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    color: #aaa;
+    font-size: 11px;
+    padding: 5px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .toggle-btn:hover { border-color: #b07d3a; color: #b07d3a; }
+  .toggle-btn.open { border-color: #b07d3a; color: #b07d3a; background: #fdf8f2; }
+
+  .log-panel {
+    display: none;
+    padding: 0 14px 14px 14px;
+    border-top: 1px solid #ece7e0;
+    background: #fdfaf7;
+  }
+
+  .core-card .log-panel {
+    border-top-color: #cce0cc;
+    background: #f8fcf8;
+  }
+
+  .log-panel.open { display: block; }
+
+  .sets-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 12px;
+  }
+
+  .sets-table th {
+    text-align: left;
+    color: #aaa;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 400;
+    padding: 0 8px 6px 0;
+    border-bottom: 1px solid #ece7e0;
+  }
+
+  .sets-table td {
+    padding: 8px 8px 8px 0;
+    border-bottom: 1px solid #f2ede8;
+    vertical-align: middle;
+  }
+
+  .sets-table tr:last-child td { border-bottom: none; }
+
+  .set-num { color: #bbb; font-size: 11px; width: 36px; }
+  .prior-set { color: #aaa; font-size: 11px; width: 100px; }
+
+  input[type="number"] {
+    width: 68px;
+    padding: 5px 8px;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: #1a1a1a;
+    background: #fff;
+    transition: border-color 0.15s;
+    -moz-appearance: textfield;
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+  input[type="number"]:focus {
+    outline: none;
+    border-color: #b07d3a;
+  }
+
+  .input-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .input-unit { font-size: 11px; color: #bbb; }
+
+  .save-confirm {
+    display: inline-block;
+    font-size: 11px;
+    color: #3a7a3a;
+    margin-top: 8px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .section-divider {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #3a7a3a;
+    padding: 14px 0 6px 0;
+    display: block;
+  }
+
+  .yoga-rest-panel {
+    padding: 36px 28px;
+    background: #fff;
+    border: 1px solid #e0dbd4;
+    border-radius: 4px;
+    text-align: center;
+  }
+
+  .yoga-rest-panel h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 3px;
+    margin-bottom: 12px;
+    color: #b07d3a;
+  }
+
+  .yoga-rest-panel p {
+    color: #777;
+    font-size: 13px;
+    line-height: 1.8;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+
+  .overload-box {
+    background: #fff;
+    border: 1px solid #e0dbd4;
+    border-left: 3px solid #b07d3a;
+    border-radius: 2px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+  }
+
+  .overload-box h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: #b07d3a;
+    margin-bottom: 10px;
+  }
+
+  .overload-box ul {
+    list-style: none;
+    font-size: 12px;
+    color: #666;
+    line-height: 2.1;
+  }
+
+  .overload-box ul li::before { content: "→ "; color: #b07d3a; }
+
+  .nutrition-intro {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 16px;
+    background: #fff;
+    padding: 14px 18px;
+    border: 1px solid #e0dbd4;
+    border-radius: 4px;
+    line-height: 1.8;
+  }
+
+  .nutrition-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .nutrition-card {
+    background: #fff;
+    border: 1px solid #e0dbd4;
+    border-radius: 4px;
+    padding: 16px;
+  }
+
+  .nutrition-card h4 {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #b07d3a;
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+
+  .nutrition-card ul {
+    list-style: none;
+    font-size: 12px;
+    color: #666;
+    line-height: 2;
+  }
+
+  .nutrition-card ul li::before { content: "· "; color: #bbb; }
+
+  .highlight { color: #1a1a1a; font-weight: 500; }
+  .prog-note { font-size: 11px; color: #999; font-style: italic; margin-bottom: 14px; }
+
+  @media (max-width: 600px) {
+    .nutrition-grid { grid-template-columns: 1fr; }
+    h1 { font-size: 28px; }
+    .tab { padding: 6px 9px; font-size: 10px; }
+    input[type="number"] { width: 56px; }
+    .prior-set { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="phase-label">Phase 2 · Week 8</div>
+  <h1>Training Plan</h1>
+  <div class="subtitle">Hypertrophy · Progressive Overload · Core Integration</div>
+</div>
+
+<div class="overload-box">
+  <h3>Progressive Overload Rules</h3>
+  <ul>
+    <li>Add weight only when you complete ALL sets at the top of the rep range with clean form</li>
+    <li>Lower body: add 5 lbs · Upper body: add 2.5 lbs</li>
+    <li>Miss reps significantly? Stay at that weight one more week</li>
+    <li>Always start unilateral sets on the LEFT side — match right to whatever left completes</li>
+    <li>Machine weights vary — trust feel, and note which machine you used</li>
+  </ul>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('mon', this)">MON · Lower</button>
+  <button class="tab" onclick="showTab('tue', this)">TUE · Push</button>
+  <button class="tab" onclick="showTab('wed', this)">WED · Yoga</button>
+  <button class="tab" onclick="showTab('thu', this)">THU · Pull</button>
+  <button class="tab" onclick="showTab('fri', this)">FRI · Yoga</button>
+  <button class="tab" onclick="showTab('sat', this)">SAT · Full Body</button>
+  <button class="tab" onclick="showTab('sun', this)">SUN · Rest</button>
+  <button class="tab" onclick="showTab('nutrition', this)">Nutrition</button>
+</div>
+
+<div id="panel-mon" class="panel active">
+  <div class="day-header">
+    <div class="day-title">Monday</div>
+    <div class="day-focus">Lower Body</div>
+    <span class="core-badge">Core ×3</span>
+  </div>
+  <div id="ex-cards-mon"></div>
+</div>
+
+<div id="panel-tue" class="panel">
+  <div class="day-header">
+    <div class="day-title">Tuesday</div>
+    <div class="day-focus">Push</div>
+    <span class="core-badge">Core ×2</span>
+  </div>
+  <div id="ex-cards-tue"></div>
+</div>
+
+<div id="panel-wed" class="panel">
+  <div class="yoga-rest-panel">
+    <h2>Bikram Yoga</h2>
+    <p>Active recovery. Easy effort throughout. No forced hyperextensions — let the lower back breathe. Focus on the standing series and steady breathing. If any posture creates sharp lumbar sensation, back off to the setup position only.</p>
+  </div>
+</div>
+
+<div id="panel-thu" class="panel">
+  <div class="day-header">
+    <div class="day-title">Thursday</div>
+    <div class="day-focus">Pull</div>
+    <span class="core-badge">Core ×2</span>
+  </div>
+  <div id="ex-cards-thu"></div>
+</div>
+
+<div id="panel-fri" class="panel">
+  <div class="yoga-rest-panel">
+    <h2>Bikram Yoga</h2>
+    <p>Four hard training days behind you — let this be genuine active recovery. Hydrate well before class given your creatine use. Re-Lyte post-class every time.</p>
+  </div>
+</div>
+
+<div id="panel-sat" class="panel">
+  <div class="day-header">
+    <div class="day-title">Saturday</div>
+    <div class="day-focus">Full Body</div>
+    <span class="core-badge">Core ×2</span>
+  </div>
+  <p class="prog-note">Standardized — same exercises every week for clean progress tracking.</p>
+  <div id="ex-cards-sat"></div>
+</div>
+
+<div id="panel-sun" class="panel">
+  <div class="yoga-rest-panel">
+    <h2>Full Rest</h2>
+    <p>No training. No yoga. This is when you actually grow. Sleep well, eat well, come back ready Monday.</p>
+  </div>
+</div>
+
+<div id="panel-nutrition" class="panel">
+  <div class="nutrition-intro">
+    Target: <span class="highlight">~180–190g protein/day</span> &nbsp;·&nbsp; Caloric surplus without GI distress &nbsp;·&nbsp; Prioritize calorie density over food volume
+  </div>
+  <div class="nutrition-grid">
+    <div class="nutrition-card">
+      <h4>Morning Smoothie (Upgraded)</h4>
+      <ul>
+        <li>Oat milk 12–16 oz <span class="highlight">✓ keep</span></li>
+        <li>Whey protein 1 scoop <span class="highlight">✓ keep</span></li>
+        <li>Creatine 5g <span class="highlight">✓ keep</span></li>
+        <li>Peanut butter 2 tbsp <span class="highlight">✓ keep</span></li>
+        <li>Add: banana or frozen mango</li>
+        <li>Add: 1 tbsp olive oil (~120 cal, tasteless)</li>
+        <li>Add: ¼ cup rolled oats blended in</li>
+      </ul>
+    </div>
+    <div class="nutrition-card">
+      <h4>Easy High-Calorie GI-Friendly Foods</h4>
+      <ul>
+        <li>Full fat Greek yogurt with honey</li>
+        <li>Avocado on anything</li>
+        <li>Hard boiled eggs (batch prep)</li>
+        <li>Cheese — easy protein and fat</li>
+        <li>White rice with olive oil and salt</li>
+        <li>Nut butter on rice cakes</li>
+        <li>Cottage cheese (high protein, gentle)</li>
+      </ul>
+    </div>
+    <div class="nutrition-card">
+      <h4>Supplement Timing (Unchanged)</h4>
+      <ul>
+        <li>Morning with food: D3, K2, Zinc, Magnesium</li>
+        <li>Pre-workout: Creatine 5g in smoothie</li>
+        <li>Post-workout: Whey 25–30g</li>
+        <li>Evening: Magnesium glycinate</li>
+        <li>Calcium citrate if dairy is low that day</li>
+      </ul>
+    </div>
+    <div class="nutrition-card">
+      <h4>GI-Friendly Principles</h4>
+      <ul>
+        <li>Smaller meals more frequently</li>
+        <li>Cooked vegetables easier than raw</li>
+        <li>White rice over whole grains when sensitive</li>
+        <li>Don't eat a big meal right before training</li>
+        <li>Hydrate consistently — creatine + Bikram demands it</li>
+        <li>Re-Lyte post-yoga every time</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+const DAYS = {
+  mon: [
+    { id:'mon-tdl',  name:'Trap bar deadlift',        sets:4, prescription:'4 × 6–8',      note:'Start 95 lbs. Add 5 lbs when all 4 sets hit 8', isCore:false },
+    { id:'mon-gs',   name:'Goblet squat',              sets:3, prescription:'3 × 10',        note:'Start 45 lbs. 2-sec pause at the bottom', isCore:false },
+    { id:'mon-lp',   name:'Leg press',                 sets:4, prescription:'4 × 10–12',     note:'Ascending: 85 → 100 → 115 → 115 lbs', isCore:false },
+    { id:'mon-rdl',  name:'Romanian deadlift (DBs)',   sets:3, prescription:'3 × 10',        note:'Start 35 each. 3-sec descent', isCore:false },
+    { id:'mon-slc',  name:'Seated leg curl',           sets:3, prescription:'3 × 12',        note:'Start 55 lbs. 1-sec hold at top', isCore:false },
+    { id:'mon-cpt',  name:'Cable pull-through',        sets:3, prescription:'3 × 15',        note:'Start 27.5 lbs. Hip hinge — not a back extension', isCore:false },
+    { id:'mon-db',   name:'Dead bug',                  sets:3, prescription:'3 × 10',        note:'Press lower back into floor throughout', isCore:true },
+    { id:'mon-pp',   name:'Pallof press',              sets:3, prescription:'3 × 12',        note:'Start 25 lbs. 2-sec hold at full extension', isCore:true },
+    { id:'mon-pl',   name:'Plank',                     sets:3, prescription:'3 × 60s',       note:'Squeeze glutes and brace hard', isCore:true },
+  ],
+  tue: [
+    { id:'tue-ibp',  name:'Incline barbell press',     sets:4, prescription:'4 × 8–10',      note:'Start 75 lbs. Consistent setup each week', isCore:false },
+    { id:'tue-lmp',  name:'Landmine press',            sets:3, prescription:'3 × 10 each',   note:'Start 20 lbs added. Left side first', isCore:false },
+    { id:'tue-ccf',  name:'Cable chest fly (low→high)',sets:3, prescription:'3 × 12',        note:'Start 15 lbs each side. Full stretch at bottom', isCore:false },
+    { id:'tue-dlr',  name:'Seated DB lateral raise',   sets:4, prescription:'4 × 15',        note:'Start 10–12.5 lbs. Added a set for shoulder volume', isCore:false },
+    { id:'tue-fp',   name:'Face pull',                 sets:3, prescription:'3 × 15',        note:'Start 22.5 lbs. Essential for shoulder and neck health', isCore:false },
+    { id:'tue-tpd',  name:'Tricep pushdown',           sets:3, prescription:'3 × 12',        note:'Start 27.5 lbs', isCore:false },
+    { id:'tue-ote',  name:'Overhead tricep extension', sets:3, prescription:'3 × 12',        note:'Start 17.5 lbs', isCore:false },
+    { id:'tue-abw',  name:'Ab wheel rollout',          sets:3, prescription:'3 × 8–10',      note:'NEW. From knees. Go only as far as neutral spine holds', isCore:true },
+    { id:'tue-sp',   name:'Side plank',                sets:3, prescription:'3 × 30–45s each',note:'NEW. Left side first. Stack or stagger feet', isCore:true },
+  ],
+  thu: [
+    { id:'thu-scr',  name:'Seated cable row',          sets:4, prescription:'4 × 10',        note:'Pick one machine and commit. Start 70 lbs', isCore:false },
+    { id:'thu-lpd',  name:'Lat pulldown (neutral grip)',sets:4,prescription:'4 × 10',         note:'Start 55 lbs. Added a set for back width', isCore:false },
+    { id:'thu-sadr', name:'Single arm DB row',         sets:3, prescription:'3 × 10 each',   note:'Start 35 lbs. Left side first', isCore:false },
+    { id:'thu-fp',   name:'Face pull',                 sets:3, prescription:'3 × 15',        note:'Start 22.5 lbs. Rear delts and neck health', isCore:false },
+    { id:'thu-idc',  name:'Incline DB curl',           sets:3, prescription:'3 × 10–12',     note:'Start 20 lbs. Slow eccentric on the way down', isCore:false },
+    { id:'thu-hc',   name:'Hammer curl',               sets:3, prescription:'3 × 12',        note:'Start 15 lbs', isCore:false },
+    { id:'thu-rf',   name:'Reverse fly',               sets:3, prescription:'3 × 15',        note:'Start 10 lbs. Controlled — protects rear delts and neck', isCore:false },
+    { id:'thu-cw',   name:'Cable woodchop (high→low)', sets:3, prescription:'3 × 12 each',   note:'NEW. Rotational work. Start 10–15 lbs. Left side first', isCore:true },
+    { id:'thu-db',   name:'Dead bug',                  sets:2, prescription:'2 × 10',        note:'Second appearance this week. Reinforce the pattern', isCore:true },
+  ],
+  sat: [
+    { id:'sat-gs',   name:'Goblet squat',              sets:3, prescription:'3 × 12',        note:'Start 40 lbs', isCore:false },
+    { id:'sat-rdl',  name:'Romanian deadlift (DBs)',   sets:3, prescription:'3 × 10',        note:'Start 35 lbs each', isCore:false },
+    { id:'sat-ibp',  name:'Incline barbell press',     sets:3, prescription:'3 × 10',        note:'Same weight as Tuesday — slightly lower intensity', isCore:false },
+    { id:'sat-lpd',  name:'Neutral grip lat pulldown', sets:3, prescription:'3 × 10',        note:'Start 55 lbs', isCore:false },
+    { id:'sat-fc',   name:"Farmer's carry",            sets:3, prescription:'3 × 60 strides',note:'35–40 lbs each. Grip, traps, bone density', isCore:false },
+    { id:'sat-cc',   name:'Cable curl',                sets:3, prescription:'3 × 12',        note:'Start 30 lbs', isCore:false },
+    { id:'sat-dips', name:'Dips',                      sets:3, prescription:'3 × 10',        note:'Work toward unassisted', isCore:false },
+    { id:'sat-pl',   name:'Plank',                     sets:3, prescription:'3 × 60s',       note:'Hold what you built', isCore:true },
+    { id:'sat-sp',   name:'Side plank',                sets:2, prescription:'2 × 30s each',  note:'Left side first', isCore:true },
+  ]
+};
+
+function getWeekKey() {
+  const now = new Date();
+  const startOfYear = new Date(now.getFullYear(), 0, 1);
+  const week = Math.ceil(((now - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
+  return now.getFullYear() + '-W' + String(week).padStart(2, '0');
+}
+
+function getPrevWeekKey() {
+  const prev = new Date(Date.now() - 7 * 86400000);
+  const startOfYear = new Date(prev.getFullYear(), 0, 1);
+  const week = Math.ceil(((prev - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
+  return prev.getFullYear() + '-W' + String(week).padStart(2, '0');
+}
+
+function saveLog(exId, setIndex, weight, reps) {
+  try {
+    const key = 'log_' + getWeekKey() + '_' + exId;
+    const data = JSON.parse(localStorage.getItem(key) || '[]');
+    data[setIndex] = { weight, reps };
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch(e) {}
+}
+
+function loadLog(exId) {
+  try {
+    return JSON.parse(localStorage.getItem('log_' + getWeekKey() + '_' + exId) || '[]');
+  } catch(e) { return []; }
+}
+
+function loadPriorLog(exId) {
+  try {
+    return JSON.parse(localStorage.getItem('log_' + getPrevWeekKey() + '_' + exId) || '[]');
+  } catch(e) { return []; }
+}
+
+function getPriorSummary(exId) {
+  const prior = loadPriorLog(exId).filter(s => s && (s.weight || s.reps));
+  if (!prior.length) return null;
+  const last = prior[prior.length - 1];
+  if (last.weight && last.reps) return last.weight + ' lbs × ' + last.reps;
+  if (last.weight) return last.weight + ' lbs';
+  if (last.reps) return last.reps + ' reps';
+  return null;
+}
+
+function renderDay(dayKey) {
+  const exercises = DAYS[dayKey];
+  const container = document.getElementById('ex-cards-' + dayKey);
+  if (!container) return;
+
+  let html = '';
+  let lastWasCore = false;
+
+  exercises.forEach(function(ex) {
+    if (ex.isCore && !lastWasCore) {
+      html += '<div class="section-divider">— Core Block —</div>';
+    }
+    lastWasCore = ex.isCore;
+
+    const priorSummary = getPriorSummary(ex.id);
+    const currentLog = loadLog(ex.id);
+    const priorLog = loadPriorLog(ex.id);
+
+    const priorHtml = '<div class="prior-week"><div class="prior-label">Last week</div><div class="prior-value">' +
+      (priorSummary || '<span style="color:#ccc">—</span>') + '</div></div>';
+
+    let setsHtml = '';
+    for (let s = 0; s < ex.sets; s++) {
+      const saved = currentLog[s] || {};
+      const priorSet = priorLog[s] || {};
+      const priorCell = (priorSet.weight || priorSet.reps)
+        ? (priorSet.weight ? priorSet.weight + ' lbs' : '—') + (priorSet.reps ? ' × ' + priorSet.reps : '')
+        : '—';
+
+      setsHtml += '<tr>' +
+        '<td class="set-num">' + (s + 1) + '</td>' +
+        '<td class="prior-set">' + priorCell + '</td>' +
+        '<td><div class="input-group">' +
+        '<input type="number" id="w_' + ex.id + '_' + s + '" placeholder="lbs" min="0" step="2.5" value="' + (saved.weight || '') + '" ' +
+        'onchange="autoSave(\'' + ex.id + '\',' + s + ')">' +
+        '<span class="input-unit">×</span>' +
+        '<input type="number" id="r_' + ex.id + '_' + s + '" placeholder="reps" min="0" step="1" value="' + (saved.reps || '') + '" ' +
+        'onchange="autoSave(\'' + ex.id + '\',' + s + ')">' +
+        '</div></td></tr>';
+    }
+
+    html += '<div class="exercise-card' + (ex.isCore ? ' core-card' : '') + '" id="card-' + ex.id + '">' +
+      '<div class="exercise-header">' +
+        '<div class="ex-left">' +
+          '<div class="ex-name">' + ex.name + '</div>' +
+          '<div class="ex-prescription">' + ex.prescription + '</div>' +
+          (ex.note ? '<div class="ex-note">' + ex.note + '</div>' : '') +
+        '</div>' +
+        priorHtml +
+        '<button class="toggle-btn" id="btn-' + ex.id + '" onclick="toggleLog(\'' + ex.id + '\')">Log</button>' +
+      '</div>' +
+      '<div class="log-panel" id="log-' + ex.id + '">' +
+        '<table class="sets-table">' +
+          '<thead><tr><th></th><th>Prior</th><th>This week</th></tr></thead>' +
+          '<tbody>' + setsHtml + '</tbody>' +
+        '</table>' +
+        '<div><span class="save-confirm" id="conf-' + ex.id + '">✓ Saved</span></div>' +
+      '</div>' +
+    '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+function toggleLog(exId) {
+  const panel = document.getElementById('log-' + exId);
+  const btn = document.getElementById('btn-' + exId);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+  btn.textContent = isOpen ? 'Log' : 'Close';
+}
+
+function autoSave(exId, setIndex) {
+  const w = document.getElementById('w_' + exId + '_' + setIndex);
+  const r = document.getElementById('r_' + exId + '_' + setIndex);
+  const weight = w && w.value ? parseFloat(w.value) : null;
+  const reps = r && r.value ? parseInt(r.value) : null;
+  if (weight !== null || reps !== null) {
+    saveLog(exId, setIndex, weight, reps);
+    flashConfirm(exId);
+  }
+}
+
+function flashConfirm(exId) {
+  const el = document.getElementById('conf-' + exId);
+  if (!el) return;
+  el.style.opacity = '1';
+  clearTimeout(el._t);
+  el._t = setTimeout(function() { el.style.opacity = '0'; }, 1800);
+}
+
+function showTab(day, btn) {
+  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById('panel-' + day).classList.add('active');
+  btn.classList.add('active');
+}
+
+['mon','tue','thu','sat'].forEach(renderDay);
+</script>
+</body>
+</html>
