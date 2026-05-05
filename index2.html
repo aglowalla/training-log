@@ -1,15 +1,15 @@
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Phase 2 — Week 8</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
-
+ 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
   body {
     background: #f5f2ee;
     color: #1a1a1a;
@@ -20,13 +20,13 @@
     max-width: 900px;
     margin: 0 auto;
   }
-
+ 
   .header {
     border-bottom: 2px solid #1a1a1a;
     padding-bottom: 16px;
     margin-bottom: 24px;
   }
-
+ 
   .phase-label {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 11px;
@@ -34,7 +34,7 @@
     color: #b07d3a;
     margin-bottom: 4px;
   }
-
+ 
   h1 {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 38px;
@@ -42,23 +42,23 @@
     line-height: 1;
     color: #1a1a1a;
   }
-
+ 
   .subtitle {
     font-size: 12px;
     color: #888;
     margin-top: 6px;
     letter-spacing: 0.5px;
   }
-
+ 
   .tabs {
     display: flex;
     gap: 3px;
     margin-bottom: 24px;
     flex-wrap: wrap;
   }
-
+ 
   .tab {
-    padding: 7px 14px;
+    padding: 7px 16px;
     border: 1px solid #ccc;
     background: #fff;
     color: #888;
@@ -70,19 +70,19 @@
     text-transform: uppercase;
     border-radius: 2px;
   }
-
+ 
   .tab:hover { border-color: #b07d3a; color: #b07d3a; }
-
+ 
   .tab.active {
     background: #b07d3a;
     border-color: #b07d3a;
     color: #fff;
     font-weight: 500;
   }
-
+ 
   .panel { display: none; }
   .panel.active { display: block; }
-
+ 
   .day-header {
     display: flex;
     align-items: center;
@@ -90,21 +90,21 @@
     margin-bottom: 18px;
     flex-wrap: wrap;
   }
-
+ 
   .day-title {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 26px;
     letter-spacing: 2px;
     color: #1a1a1a;
   }
-
+ 
   .day-focus {
     font-size: 11px;
     letter-spacing: 3px;
     text-transform: uppercase;
     color: #b07d3a;
   }
-
+ 
   .core-badge {
     display: inline-block;
     background: #eaf4ea;
@@ -116,7 +116,7 @@
     padding: 3px 10px;
     border-radius: 2px;
   }
-
+ 
   .exercise-card {
     background: #fff;
     border: 1px solid #e0dbd4;
@@ -124,12 +124,12 @@
     margin-bottom: 8px;
     overflow: hidden;
   }
-
+ 
   .exercise-card.core-card {
     background: #f4faf4;
     border-color: #b8d8b8;
   }
-
+ 
   .exercise-header {
     display: flex;
     align-items: center;
@@ -137,39 +137,39 @@
     padding: 12px 14px;
     gap: 10px;
   }
-
+ 
   .ex-left { flex: 1; min-width: 0; }
-
+ 
   .ex-name {
     font-size: 13px;
     font-weight: 500;
     color: #1a1a1a;
     margin-bottom: 2px;
   }
-
+ 
   .core-card .ex-name { color: #2a5a2a; }
-
+ 
   .ex-prescription {
     font-size: 11px;
     color: #b07d3a;
     font-family: 'Bebas Neue', sans-serif;
     letter-spacing: 1px;
   }
-
+ 
   .ex-note {
     font-size: 11px;
     color: #999;
     margin-top: 2px;
     font-style: italic;
   }
-
+ 
   .prior-week {
     text-align: right;
     font-size: 11px;
     flex-shrink: 0;
     min-width: 80px;
   }
-
+ 
   .prior-label {
     color: #aaa;
     font-size: 10px;
@@ -177,9 +177,9 @@
     text-transform: uppercase;
     margin-bottom: 2px;
   }
-
+ 
   .prior-value { color: #555; }
-
+ 
   .toggle-btn {
     background: none;
     border: 1px solid #ddd;
@@ -193,31 +193,31 @@
     transition: all 0.15s;
     font-family: 'DM Sans', sans-serif;
   }
-
+ 
   .toggle-btn:hover { border-color: #b07d3a; color: #b07d3a; }
   .toggle-btn.open { border-color: #b07d3a; color: #b07d3a; background: #fdf8f2; }
-
+ 
   .log-panel {
     display: none;
     padding: 0 14px 14px 14px;
     border-top: 1px solid #ece7e0;
     background: #fdfaf7;
   }
-
+ 
   .core-card .log-panel {
     border-top-color: #cce0cc;
     background: #f8fcf8;
   }
-
+ 
   .log-panel.open { display: block; }
-
+ 
   .sets-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 12px;
     font-size: 12px;
   }
-
+ 
   .sets-table th {
     text-align: left;
     color: #aaa;
@@ -228,18 +228,18 @@
     padding: 0 8px 6px 0;
     border-bottom: 1px solid #ece7e0;
   }
-
+ 
   .sets-table td {
     padding: 8px 8px 8px 0;
     border-bottom: 1px solid #f2ede8;
     vertical-align: middle;
   }
-
+ 
   .sets-table tr:last-child td { border-bottom: none; }
-
+ 
   .set-num { color: #bbb; font-size: 11px; width: 36px; }
   .prior-set { color: #aaa; font-size: 11px; width: 100px; }
-
+ 
   input[type="number"] {
     width: 68px;
     padding: 5px 8px;
@@ -252,23 +252,20 @@
     transition: border-color 0.15s;
     -moz-appearance: textfield;
   }
-
+ 
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
-
-  input[type="number"]:focus {
-    outline: none;
-    border-color: #b07d3a;
-  }
-
+ 
+  input[type="number"]:focus { outline: none; border-color: #b07d3a; }
+ 
   .input-group {
     display: flex;
     align-items: center;
     gap: 6px;
   }
-
+ 
   .input-unit { font-size: 11px; color: #bbb; }
-
+ 
   .save-confirm {
     display: inline-block;
     font-size: 11px;
@@ -277,7 +274,7 @@
     opacity: 0;
     transition: opacity 0.3s;
   }
-
+ 
   .section-divider {
     font-size: 10px;
     letter-spacing: 3px;
@@ -286,7 +283,7 @@
     padding: 14px 0 6px 0;
     display: block;
   }
-
+ 
   .yoga-rest-panel {
     padding: 36px 28px;
     background: #fff;
@@ -294,7 +291,7 @@
     border-radius: 4px;
     text-align: center;
   }
-
+ 
   .yoga-rest-panel h2 {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 28px;
@@ -302,7 +299,7 @@
     margin-bottom: 12px;
     color: #b07d3a;
   }
-
+ 
   .yoga-rest-panel p {
     color: #777;
     font-size: 13px;
@@ -310,7 +307,7 @@
     max-width: 460px;
     margin: 0 auto;
   }
-
+ 
   .overload-box {
     background: #fff;
     border: 1px solid #e0dbd4;
@@ -319,7 +316,7 @@
     padding: 16px 20px;
     margin-bottom: 22px;
   }
-
+ 
   .overload-box h3 {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 14px;
@@ -327,78 +324,146 @@
     color: #b07d3a;
     margin-bottom: 10px;
   }
-
+ 
   .overload-box ul {
     list-style: none;
     font-size: 12px;
     color: #666;
     line-height: 2.1;
   }
-
+ 
   .overload-box ul li::before { content: "→ "; color: #b07d3a; }
-
-  .nutrition-intro {
-    font-size: 13px;
-    color: #555;
-    margin-bottom: 16px;
-    background: #fff;
-    padding: 14px 18px;
-    border: 1px solid #e0dbd4;
-    border-radius: 4px;
-    line-height: 1.8;
-  }
-
-  .nutrition-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+ 
+  /* TRENDS */
+  .trends-controls {
+    display: flex;
     gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
   }
-
-  .nutrition-card {
+ 
+  .trends-controls label {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #888;
+    margin-right: 4px;
+  }
+ 
+  select {
+    padding: 7px 12px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    background: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: #1a1a1a;
+    cursor: pointer;
+  }
+ 
+  select:focus { outline: none; border-color: #b07d3a; }
+ 
+  .chart-wrap {
     background: #fff;
     border: 1px solid #e0dbd4;
     border-radius: 4px;
-    padding: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
   }
-
-  .nutrition-card h4 {
-    font-size: 10px;
+ 
+  .no-data-msg {
+    text-align: center;
+    color: #aaa;
+    font-size: 13px;
+    padding: 40px 20px;
+    font-style: italic;
+  }
+ 
+  /* EXPORT */
+  .export-section {
+    background: #fff;
+    border: 1px solid #e0dbd4;
+    border-radius: 4px;
+    padding: 24px;
+  }
+ 
+  .export-section h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
     letter-spacing: 3px;
-    text-transform: uppercase;
     color: #b07d3a;
-    margin-bottom: 10px;
-    font-weight: 500;
+    margin-bottom: 6px;
   }
-
-  .nutrition-card ul {
-    list-style: none;
+ 
+  .export-section p {
     font-size: 12px;
-    color: #666;
-    line-height: 2;
+    color: #888;
+    margin-bottom: 20px;
+    line-height: 1.7;
   }
-
-  .nutrition-card ul li::before { content: "· "; color: #bbb; }
-
-  .highlight { color: #1a1a1a; font-weight: 500; }
+ 
+  .export-btns {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+ 
+  .export-btn {
+    padding: 9px 22px;
+    border: 1px solid #b07d3a;
+    border-radius: 2px;
+    background: #b07d3a;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+    letter-spacing: 0.5px;
+  }
+ 
+  .export-btn:hover { background: #9a6b2e; border-color: #9a6b2e; }
+ 
+  .export-btn.secondary {
+    background: #fff;
+    color: #b07d3a;
+  }
+ 
+  .export-btn.secondary:hover { background: #fdf8f2; }
+ 
+  .export-preview {
+    margin-top: 20px;
+    background: #f8f5f2;
+    border: 1px solid #e0dbd4;
+    border-radius: 2px;
+    padding: 14px;
+    font-size: 11px;
+    color: #666;
+    font-family: monospace;
+    max-height: 200px;
+    overflow-y: auto;
+    white-space: pre;
+    display: none;
+  }
+ 
   .prog-note { font-size: 11px; color: #999; font-style: italic; margin-bottom: 14px; }
-
+ 
   @media (max-width: 600px) {
-    .nutrition-grid { grid-template-columns: 1fr; }
     h1 { font-size: 28px; }
-    .tab { padding: 6px 9px; font-size: 10px; }
+    .tab { padding: 6px 10px; font-size: 10px; }
     input[type="number"] { width: 56px; }
     .prior-set { display: none; }
   }
 </style>
 </head>
 <body>
-
+ 
 <div class="header">
   <div class="phase-label">Phase 2 · Week 8</div>
   <h1>Training Plan</h1>
   <div class="subtitle">Hypertrophy · Progressive Overload · Core Integration</div>
 </div>
-
+ 
 <div class="overload-box">
   <h3>Progressive Overload Rules</h3>
   <ul>
@@ -409,18 +474,20 @@
     <li>Machine weights vary — trust feel, and note which machine you used</li>
   </ul>
 </div>
-
+ 
 <div class="tabs">
-  <button class="tab active" onclick="showTab('mon', this)">MON · Lower</button>
-  <button class="tab" onclick="showTab('tue', this)">TUE · Push</button>
-  <button class="tab" onclick="showTab('wed', this)">WED · Yoga</button>
-  <button class="tab" onclick="showTab('thu', this)">THU · Pull</button>
-  <button class="tab" onclick="showTab('fri', this)">FRI · Yoga</button>
-  <button class="tab" onclick="showTab('sat', this)">SAT · Full Body</button>
-  <button class="tab" onclick="showTab('sun', this)">SUN · Rest</button>
-  <button class="tab" onclick="showTab('nutrition', this)">Nutrition</button>
+  <button class="tab active" onclick="showTab('mon', this)">Mon</button>
+  <button class="tab" onclick="showTab('tue', this)">Tue</button>
+  <button class="tab" onclick="showTab('wed', this)">Wed</button>
+  <button class="tab" onclick="showTab('thu', this)">Thu</button>
+  <button class="tab" onclick="showTab('fri', this)">Fri</button>
+  <button class="tab" onclick="showTab('sat', this)">Sat</button>
+  <button class="tab" onclick="showTab('sun', this)">Sun</button>
+  <button class="tab" onclick="showTab('trends', this)">Trends</button>
+  <button class="tab" onclick="showTab('export', this)">Export</button>
 </div>
-
+ 
+<!-- MONDAY -->
 <div id="panel-mon" class="panel active">
   <div class="day-header">
     <div class="day-title">Monday</div>
@@ -429,7 +496,8 @@
   </div>
   <div id="ex-cards-mon"></div>
 </div>
-
+ 
+<!-- TUESDAY -->
 <div id="panel-tue" class="panel">
   <div class="day-header">
     <div class="day-title">Tuesday</div>
@@ -438,14 +506,16 @@
   </div>
   <div id="ex-cards-tue"></div>
 </div>
-
+ 
+<!-- WEDNESDAY -->
 <div id="panel-wed" class="panel">
   <div class="yoga-rest-panel">
     <h2>Bikram Yoga</h2>
     <p>Active recovery. Easy effort throughout. No forced hyperextensions — let the lower back breathe. Focus on the standing series and steady breathing. If any posture creates sharp lumbar sensation, back off to the setup position only.</p>
   </div>
 </div>
-
+ 
+<!-- THURSDAY -->
 <div id="panel-thu" class="panel">
   <div class="day-header">
     <div class="day-title">Thursday</div>
@@ -454,14 +524,16 @@
   </div>
   <div id="ex-cards-thu"></div>
 </div>
-
+ 
+<!-- FRIDAY -->
 <div id="panel-fri" class="panel">
   <div class="yoga-rest-panel">
     <h2>Bikram Yoga</h2>
     <p>Four hard training days behind you — let this be genuine active recovery. Hydrate well before class given your creatine use. Re-Lyte post-class every time.</p>
   </div>
 </div>
-
+ 
+<!-- SATURDAY -->
 <div id="panel-sat" class="panel">
   <div class="day-header">
     <div class="day-title">Saturday</div>
@@ -471,202 +543,187 @@
   <p class="prog-note">Standardized — same exercises every week for clean progress tracking.</p>
   <div id="ex-cards-sat"></div>
 </div>
-
+ 
+<!-- SUNDAY -->
 <div id="panel-sun" class="panel">
   <div class="yoga-rest-panel">
     <h2>Full Rest</h2>
     <p>No training. No yoga. This is when you actually grow. Sleep well, eat well, come back ready Monday.</p>
   </div>
 </div>
-
-<div id="panel-nutrition" class="panel">
-  <div class="nutrition-intro">
-    Target: <span class="highlight">~180–190g protein/day</span> &nbsp;·&nbsp; Caloric surplus without GI distress &nbsp;·&nbsp; Prioritize calorie density over food volume
+ 
+<!-- TRENDS -->
+<div id="panel-trends" class="panel">
+  <div class="trends-controls">
+    <label>Exercise</label>
+    <select id="trends-exercise-select" onchange="renderTrends()"></select>
+    <label style="margin-left:10px">Set</label>
+    <select id="trends-set-select" onchange="renderTrends()">
+      <option value="max">Best set (max weight)</option>
+      <option value="0">Set 1</option>
+      <option value="1">Set 2</option>
+      <option value="2">Set 3</option>
+      <option value="3">Set 4</option>
+    </select>
   </div>
-  <div class="nutrition-grid">
-    <div class="nutrition-card">
-      <h4>Morning Smoothie (Upgraded)</h4>
-      <ul>
-        <li>Oat milk 12–16 oz <span class="highlight">✓ keep</span></li>
-        <li>Whey protein 1 scoop <span class="highlight">✓ keep</span></li>
-        <li>Creatine 5g <span class="highlight">✓ keep</span></li>
-        <li>Peanut butter 2 tbsp <span class="highlight">✓ keep</span></li>
-        <li>Add: banana or frozen mango</li>
-        <li>Add: 1 tbsp olive oil (~120 cal, tasteless)</li>
-        <li>Add: ¼ cup rolled oats blended in</li>
-      </ul>
-    </div>
-    <div class="nutrition-card">
-      <h4>Easy High-Calorie GI-Friendly Foods</h4>
-      <ul>
-        <li>Full fat Greek yogurt with honey</li>
-        <li>Avocado on anything</li>
-        <li>Hard boiled eggs (batch prep)</li>
-        <li>Cheese — easy protein and fat</li>
-        <li>White rice with olive oil and salt</li>
-        <li>Nut butter on rice cakes</li>
-        <li>Cottage cheese (high protein, gentle)</li>
-      </ul>
-    </div>
-    <div class="nutrition-card">
-      <h4>Supplement Timing (Unchanged)</h4>
-      <ul>
-        <li>Morning with food: D3, K2, Zinc, Magnesium</li>
-        <li>Pre-workout: Creatine 5g in smoothie</li>
-        <li>Post-workout: Whey 25–30g</li>
-        <li>Evening: Magnesium glycinate</li>
-        <li>Calcium citrate if dairy is low that day</li>
-      </ul>
-    </div>
-    <div class="nutrition-card">
-      <h4>GI-Friendly Principles</h4>
-      <ul>
-        <li>Smaller meals more frequently</li>
-        <li>Cooked vegetables easier than raw</li>
-        <li>White rice over whole grains when sensitive</li>
-        <li>Don't eat a big meal right before training</li>
-        <li>Hydrate consistently — creatine + Bikram demands it</li>
-        <li>Re-Lyte post-yoga every time</li>
-      </ul>
-    </div>
+  <div class="chart-wrap">
+    <canvas id="trends-chart" height="90"></canvas>
+    <div class="no-data-msg" id="trends-no-data" style="display:none">No logged data yet for this exercise. Start logging sets and the chart will fill in week over week.</div>
   </div>
 </div>
-
+ 
+<!-- EXPORT -->
+<div id="panel-export" class="panel">
+  <div class="export-section">
+    <h3>Export Your Data</h3>
+    <p>Download all logged workout data. CSV opens in Excel or Google Sheets. JSON is useful for backup or importing into other tools.</p>
+    <div class="export-btns">
+      <button class="export-btn" onclick="exportCSV()">Download CSV</button>
+      <button class="export-btn secondary" onclick="exportJSON()">Download JSON</button>
+      <button class="export-btn secondary" onclick="previewData()">Preview Data</button>
+    </div>
+    <pre class="export-preview" id="export-preview"></pre>
+  </div>
+</div>
+ 
 <script>
 const DAYS = {
-  mon: [
-    { id:'mon-tdl',  name:'Trap bar deadlift',        sets:4, prescription:'4 × 6–8',      note:'Start 95 lbs. Add 5 lbs when all 4 sets hit 8', isCore:false },
-    { id:'mon-gs',   name:'Goblet squat',              sets:3, prescription:'3 × 10',        note:'Start 45 lbs. 2-sec pause at the bottom', isCore:false },
-    { id:'mon-lp',   name:'Leg press',                 sets:4, prescription:'4 × 10–12',     note:'Ascending: 85 → 100 → 115 → 115 lbs', isCore:false },
-    { id:'mon-rdl',  name:'Romanian deadlift (DBs)',   sets:3, prescription:'3 × 10',        note:'Start 35 each. 3-sec descent', isCore:false },
-    { id:'mon-slc',  name:'Seated leg curl',           sets:3, prescription:'3 × 12',        note:'Start 55 lbs. 1-sec hold at top', isCore:false },
-    { id:'mon-cpt',  name:'Cable pull-through',        sets:3, prescription:'3 × 15',        note:'Start 27.5 lbs. Hip hinge — not a back extension', isCore:false },
-    { id:'mon-db',   name:'Dead bug',                  sets:3, prescription:'3 × 10',        note:'Press lower back into floor throughout', isCore:true },
-    { id:'mon-pp',   name:'Pallof press',              sets:3, prescription:'3 × 12',        note:'Start 25 lbs. 2-sec hold at full extension', isCore:true },
-    { id:'mon-pl',   name:'Plank',                     sets:3, prescription:'3 × 60s',       note:'Squeeze glutes and brace hard', isCore:true },
-  ],
-  tue: [
-    { id:'tue-ibp',  name:'Incline barbell press',     sets:4, prescription:'4 × 8–10',      note:'Start 75 lbs. Consistent setup each week', isCore:false },
-    { id:'tue-lmp',  name:'Landmine press',            sets:3, prescription:'3 × 10 each',   note:'Start 20 lbs added. Left side first', isCore:false },
-    { id:'tue-ccf',  name:'Cable chest fly (low→high)',sets:3, prescription:'3 × 12',        note:'Start 15 lbs each side. Full stretch at bottom', isCore:false },
-    { id:'tue-dlr',  name:'Seated DB lateral raise',   sets:4, prescription:'4 × 15',        note:'Start 10–12.5 lbs. Added a set for shoulder volume', isCore:false },
-    { id:'tue-fp',   name:'Face pull',                 sets:3, prescription:'3 × 15',        note:'Start 22.5 lbs. Essential for shoulder and neck health', isCore:false },
-    { id:'tue-tpd',  name:'Tricep pushdown',           sets:3, prescription:'3 × 12',        note:'Start 27.5 lbs', isCore:false },
-    { id:'tue-ote',  name:'Overhead tricep extension', sets:3, prescription:'3 × 12',        note:'Start 17.5 lbs', isCore:false },
-    { id:'tue-abw',  name:'Ab wheel rollout',          sets:3, prescription:'3 × 8–10',      note:'NEW. From knees. Go only as far as neutral spine holds', isCore:true },
-    { id:'tue-sp',   name:'Side plank',                sets:3, prescription:'3 × 30–45s each',note:'NEW. Left side first. Stack or stagger feet', isCore:true },
-  ],
-  thu: [
-    { id:'thu-scr',  name:'Seated cable row',          sets:4, prescription:'4 × 10',        note:'Pick one machine and commit. Start 70 lbs', isCore:false },
-    { id:'thu-lpd',  name:'Lat pulldown (neutral grip)',sets:4,prescription:'4 × 10',         note:'Start 55 lbs. Added a set for back width', isCore:false },
-    { id:'thu-sadr', name:'Single arm DB row',         sets:3, prescription:'3 × 10 each',   note:'Start 35 lbs. Left side first', isCore:false },
-    { id:'thu-fp',   name:'Face pull',                 sets:3, prescription:'3 × 15',        note:'Start 22.5 lbs. Rear delts and neck health', isCore:false },
-    { id:'thu-idc',  name:'Incline DB curl',           sets:3, prescription:'3 × 10–12',     note:'Start 20 lbs. Slow eccentric on the way down', isCore:false },
-    { id:'thu-hc',   name:'Hammer curl',               sets:3, prescription:'3 × 12',        note:'Start 15 lbs', isCore:false },
-    { id:'thu-rf',   name:'Reverse fly',               sets:3, prescription:'3 × 15',        note:'Start 10 lbs. Controlled — protects rear delts and neck', isCore:false },
-    { id:'thu-cw',   name:'Cable woodchop (high→low)', sets:3, prescription:'3 × 12 each',   note:'NEW. Rotational work. Start 10–15 lbs. Left side first', isCore:true },
-    { id:'thu-db',   name:'Dead bug',                  sets:2, prescription:'2 × 10',        note:'Second appearance this week. Reinforce the pattern', isCore:true },
-  ],
-  sat: [
-    { id:'sat-gs',   name:'Goblet squat',              sets:3, prescription:'3 × 12',        note:'Start 40 lbs', isCore:false },
-    { id:'sat-rdl',  name:'Romanian deadlift (DBs)',   sets:3, prescription:'3 × 10',        note:'Start 35 lbs each', isCore:false },
-    { id:'sat-ibp',  name:'Incline barbell press',     sets:3, prescription:'3 × 10',        note:'Same weight as Tuesday — slightly lower intensity', isCore:false },
-    { id:'sat-lpd',  name:'Neutral grip lat pulldown', sets:3, prescription:'3 × 10',        note:'Start 55 lbs', isCore:false },
-    { id:'sat-fc',   name:"Farmer's carry",            sets:3, prescription:'3 × 60 strides',note:'35–40 lbs each. Grip, traps, bone density', isCore:false },
-    { id:'sat-cc',   name:'Cable curl',                sets:3, prescription:'3 × 12',        note:'Start 30 lbs', isCore:false },
-    { id:'sat-dips', name:'Dips',                      sets:3, prescription:'3 × 10',        note:'Work toward unassisted', isCore:false },
-    { id:'sat-pl',   name:'Plank',                     sets:3, prescription:'3 × 60s',       note:'Hold what you built', isCore:true },
-    { id:'sat-sp',   name:'Side plank',                sets:2, prescription:'2 × 30s each',  note:'Left side first', isCore:true },
-  ]
+  mon: {
+    title: 'Monday', focus: 'Lower Body', coreBadge: 'Core ×3',
+    exercises: [
+      { id:'mon-tdl',  name:'Trap bar deadlift',        sets:4, prescription:'4 × 6–8',       note:'Start 95 lbs. Add 5 lbs when all 4 sets hit 8', isCore:false },
+      { id:'mon-gs',   name:'Goblet squat',              sets:3, prescription:'3 × 10',         note:'Start 45 lbs. 2-sec pause at the bottom', isCore:false },
+      { id:'mon-lp',   name:'Leg press',                 sets:4, prescription:'4 × 10–12',      note:'Ascending: 85 → 100 → 115 → 115 lbs', isCore:false },
+      { id:'mon-rdl',  name:'Romanian deadlift (DBs)',   sets:3, prescription:'3 × 10',         note:'Start 35 each. 3-sec descent', isCore:false },
+      { id:'mon-slc',  name:'Seated leg curl',           sets:3, prescription:'3 × 12',         note:'Start 55 lbs. 1-sec hold at top', isCore:false },
+      { id:'mon-cpt',  name:'Cable pull-through',        sets:3, prescription:'3 × 15',         note:'Start 27.5 lbs. Hip hinge — not a back extension', isCore:false },
+      { id:'mon-db',   name:'Dead bug',                  sets:3, prescription:'3 × 10',         note:'Press lower back into floor throughout', isCore:true },
+      { id:'mon-pp',   name:'Pallof press',              sets:3, prescription:'3 × 12',         note:'Start 25 lbs. 2-sec hold at full extension', isCore:true },
+      { id:'mon-pl',   name:'Plank',                     sets:3, prescription:'3 × 60s',        note:'Squeeze glutes and brace hard', isCore:true },
+    ]
+  },
+  tue: {
+    title: 'Tuesday', focus: 'Push', coreBadge: 'Core ×2',
+    exercises: [
+      { id:'tue-ibp',  name:'Incline barbell press',     sets:4, prescription:'4 × 8–10',       note:'Start 75 lbs. Consistent setup each week', isCore:false },
+      { id:'tue-lmp',  name:'Landmine press',            sets:3, prescription:'3 × 10 each',    note:'Start 20 lbs added. Left side first', isCore:false },
+      { id:'tue-ccf',  name:'Cable chest fly (low→high)',sets:3, prescription:'3 × 12',         note:'Start 15 lbs each side. Full stretch at bottom', isCore:false },
+      { id:'tue-dlr',  name:'Seated DB lateral raise',   sets:4, prescription:'4 × 15',         note:'Start 10–12.5 lbs. Added a set for shoulder volume', isCore:false },
+      { id:'tue-fp',   name:'Face pull',                 sets:3, prescription:'3 × 15',         note:'Start 22.5 lbs. Essential for shoulder and neck health', isCore:false },
+      { id:'tue-tpd',  name:'Tricep pushdown',           sets:3, prescription:'3 × 12',         note:'Start 27.5 lbs', isCore:false },
+      { id:'tue-ote',  name:'Overhead tricep extension', sets:3, prescription:'3 × 12',         note:'Start 17.5 lbs', isCore:false },
+      { id:'tue-abw',  name:'Ab wheel rollout',          sets:3, prescription:'3 × 8–10',       note:'NEW. From knees. Go only as far as neutral spine holds', isCore:true },
+      { id:'tue-sp',   name:'Side plank',                sets:3, prescription:'3 × 30–45s each',note:'NEW. Left side first. Stack or stagger feet', isCore:true },
+    ]
+  },
+  thu: {
+    title: 'Thursday', focus: 'Pull', coreBadge: 'Core ×2',
+    exercises: [
+      { id:'thu-scr',  name:'Seated cable row',          sets:4, prescription:'4 × 10',         note:'Pick one machine and commit. Start 70 lbs', isCore:false },
+      { id:'thu-lpd',  name:'Lat pulldown (neutral grip)',sets:4,prescription:'4 × 10',          note:'Start 55 lbs. Added a set for back width', isCore:false },
+      { id:'thu-sadr', name:'Single arm DB row',         sets:3, prescription:'3 × 10 each',    note:'Start 35 lbs. Left side first', isCore:false },
+      { id:'thu-fp',   name:'Face pull',                 sets:3, prescription:'3 × 15',         note:'Start 22.5 lbs. Rear delts and neck health', isCore:false },
+      { id:'thu-idc',  name:'Incline DB curl',           sets:3, prescription:'3 × 10–12',      note:'Start 20 lbs. Slow eccentric on the way down', isCore:false },
+      { id:'thu-hc',   name:'Hammer curl',               sets:3, prescription:'3 × 12',         note:'Start 15 lbs', isCore:false },
+      { id:'thu-rf',   name:'Reverse fly',               sets:3, prescription:'3 × 15',         note:'Start 10 lbs. Controlled — protects rear delts and neck', isCore:false },
+      { id:'thu-cw',   name:'Cable woodchop (high→low)', sets:3, prescription:'3 × 12 each',    note:'NEW. Rotational work. Start 10–15 lbs. Left side first', isCore:true },
+      { id:'thu-db',   name:'Dead bug',                  sets:2, prescription:'2 × 10',         note:'Second appearance this week. Reinforce the pattern', isCore:true },
+    ]
+  },
+  sat: {
+    title: 'Saturday', focus: 'Full Body', coreBadge: 'Core ×2',
+    exercises: [
+      { id:'sat-gs',   name:'Goblet squat',              sets:3, prescription:'3 × 12',         note:'Start 40 lbs', isCore:false },
+      { id:'sat-rdl',  name:'Romanian deadlift (DBs)',   sets:3, prescription:'3 × 10',         note:'Start 35 lbs each', isCore:false },
+      { id:'sat-ibp',  name:'Incline barbell press',     sets:3, prescription:'3 × 10',         note:'Same weight as Tuesday — slightly lower intensity', isCore:false },
+      { id:'sat-lpd',  name:'Neutral grip lat pulldown', sets:3, prescription:'3 × 10',         note:'Start 55 lbs', isCore:false },
+      { id:'sat-fc',   name:"Farmer's carry",            sets:3, prescription:'3 × 60 strides', note:'35–40 lbs each. Grip, traps, bone density', isCore:false },
+      { id:'sat-cc',   name:'Cable curl',                sets:3, prescription:'3 × 12',         note:'Start 30 lbs', isCore:false },
+      { id:'sat-dips', name:'Dips',                      sets:3, prescription:'3 × 10',         note:'Work toward unassisted', isCore:false },
+      { id:'sat-pl',   name:'Plank',                     sets:3, prescription:'3 × 60s',        note:'Hold what you built', isCore:true },
+      { id:'sat-sp',   name:'Side plank',                sets:2, prescription:'2 × 30s each',   note:'Left side first', isCore:true },
+    ]
+  }
 };
-
-function getWeekKey() {
-  const now = new Date();
-  const startOfYear = new Date(now.getFullYear(), 0, 1);
-  const week = Math.ceil(((now - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
-  return now.getFullYear() + '-W' + String(week).padStart(2, '0');
+ 
+const ALL_EXERCISES = [];
+Object.values(DAYS).forEach(function(day) {
+  day.exercises.forEach(function(ex) { ALL_EXERCISES.push(ex); });
+});
+ 
+function getWeekKey(offsetWeeks) {
+  var d = new Date(Date.now() + (offsetWeeks || 0) * 7 * 86400000);
+  var startOfYear = new Date(d.getFullYear(), 0, 1);
+  var week = Math.ceil(((d - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
+  return d.getFullYear() + '-W' + String(week).padStart(2, '0');
 }
-
-function getPrevWeekKey() {
-  const prev = new Date(Date.now() - 7 * 86400000);
-  const startOfYear = new Date(prev.getFullYear(), 0, 1);
-  const week = Math.ceil(((prev - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
-  return prev.getFullYear() + '-W' + String(week).padStart(2, '0');
-}
-
+ 
 function saveLog(exId, setIndex, weight, reps) {
   try {
-    const key = 'log_' + getWeekKey() + '_' + exId;
-    const data = JSON.parse(localStorage.getItem(key) || '[]');
-    data[setIndex] = { weight, reps };
+    var key = 'log_' + getWeekKey(0) + '_' + exId;
+    var data = JSON.parse(localStorage.getItem(key) || '[]');
+    data[setIndex] = { weight: weight, reps: reps };
     localStorage.setItem(key, JSON.stringify(data));
   } catch(e) {}
 }
-
-function loadLog(exId) {
+ 
+function loadLog(exId, weekOffset) {
   try {
-    return JSON.parse(localStorage.getItem('log_' + getWeekKey() + '_' + exId) || '[]');
+    return JSON.parse(localStorage.getItem('log_' + getWeekKey(weekOffset || 0) + '_' + exId) || '[]');
   } catch(e) { return []; }
 }
-
-function loadPriorLog(exId) {
-  try {
-    return JSON.parse(localStorage.getItem('log_' + getPrevWeekKey() + '_' + exId) || '[]');
-  } catch(e) { return []; }
-}
-
+ 
 function getPriorSummary(exId) {
-  const prior = loadPriorLog(exId).filter(s => s && (s.weight || s.reps));
+  var prior = loadLog(exId, -1).filter(function(s) { return s && (s.weight || s.reps); });
   if (!prior.length) return null;
-  const last = prior[prior.length - 1];
+  var last = prior[prior.length - 1];
   if (last.weight && last.reps) return last.weight + ' lbs × ' + last.reps;
   if (last.weight) return last.weight + ' lbs';
   if (last.reps) return last.reps + ' reps';
   return null;
 }
-
+ 
 function renderDay(dayKey) {
-  const exercises = DAYS[dayKey];
-  const container = document.getElementById('ex-cards-' + dayKey);
+  var dayData = DAYS[dayKey];
+  if (!dayData) return;
+  var container = document.getElementById('ex-cards-' + dayKey);
   if (!container) return;
-
-  let html = '';
-  let lastWasCore = false;
-
-  exercises.forEach(function(ex) {
+ 
+  var html = '';
+  var lastWasCore = false;
+ 
+  dayData.exercises.forEach(function(ex) {
     if (ex.isCore && !lastWasCore) {
       html += '<div class="section-divider">— Core Block —</div>';
     }
     lastWasCore = ex.isCore;
-
-    const priorSummary = getPriorSummary(ex.id);
-    const currentLog = loadLog(ex.id);
-    const priorLog = loadPriorLog(ex.id);
-
-    const priorHtml = '<div class="prior-week"><div class="prior-label">Last week</div><div class="prior-value">' +
+ 
+    var priorSummary = getPriorSummary(ex.id);
+    var currentLog = loadLog(ex.id, 0);
+    var priorLog = loadLog(ex.id, -1);
+ 
+    var priorHtml = '<div class="prior-week"><div class="prior-label">Last week</div><div class="prior-value">' +
       (priorSummary || '<span style="color:#ccc">—</span>') + '</div></div>';
-
-    let setsHtml = '';
-    for (let s = 0; s < ex.sets; s++) {
-      const saved = currentLog[s] || {};
-      const priorSet = priorLog[s] || {};
-      const priorCell = (priorSet.weight || priorSet.reps)
+ 
+    var setsHtml = '';
+    for (var s = 0; s < ex.sets; s++) {
+      var saved = currentLog[s] || {};
+      var priorSet = priorLog[s] || {};
+      var priorCell = (priorSet.weight || priorSet.reps)
         ? (priorSet.weight ? priorSet.weight + ' lbs' : '—') + (priorSet.reps ? ' × ' + priorSet.reps : '')
         : '—';
-
+ 
       setsHtml += '<tr>' +
         '<td class="set-num">' + (s + 1) + '</td>' +
         '<td class="prior-set">' + priorCell + '</td>' +
         '<td><div class="input-group">' +
-        '<input type="number" id="w_' + ex.id + '_' + s + '" placeholder="lbs" min="0" step="2.5" value="' + (saved.weight || '') + '" ' +
-        'onchange="autoSave(\'' + ex.id + '\',' + s + ')">' +
+        '<input type="number" id="w_' + ex.id + '_' + s + '" placeholder="lbs" min="0" step="2.5" value="' + (saved.weight || '') + '" onchange="autoSave(\'' + ex.id + '\',' + s + ')">' +
         '<span class="input-unit">×</span>' +
-        '<input type="number" id="r_' + ex.id + '_' + s + '" placeholder="reps" min="0" step="1" value="' + (saved.reps || '') + '" ' +
-        'onchange="autoSave(\'' + ex.id + '\',' + s + ')">' +
+        '<input type="number" id="r_' + ex.id + '_' + s + '" placeholder="reps" min="0" step="1" value="' + (saved.reps || '') + '" onchange="autoSave(\'' + ex.id + '\',' + s + ')">' +
         '</div></td></tr>';
     }
-
-    html += '<div class="exercise-card' + (ex.isCore ? ' core-card' : '') + '" id="card-' + ex.id + '">' +
+ 
+    html += '<div class="exercise-card' + (ex.isCore ? ' core-card' : '') + '">' +
       '<div class="exercise-header">' +
         '<div class="ex-left">' +
           '<div class="ex-name">' + ex.name + '</div>' +
@@ -677,54 +734,233 @@ function renderDay(dayKey) {
         '<button class="toggle-btn" id="btn-' + ex.id + '" onclick="toggleLog(\'' + ex.id + '\')">Log</button>' +
       '</div>' +
       '<div class="log-panel" id="log-' + ex.id + '">' +
-        '<table class="sets-table">' +
-          '<thead><tr><th></th><th>Prior</th><th>This week</th></tr></thead>' +
-          '<tbody>' + setsHtml + '</tbody>' +
-        '</table>' +
+        '<table class="sets-table"><thead><tr><th></th><th>Prior</th><th>This week</th></tr></thead><tbody>' + setsHtml + '</tbody></table>' +
         '<div><span class="save-confirm" id="conf-' + ex.id + '">✓ Saved</span></div>' +
-      '</div>' +
-    '</div>';
+      '</div></div>';
   });
-
+ 
   container.innerHTML = html;
 }
-
+ 
 function toggleLog(exId) {
-  const panel = document.getElementById('log-' + exId);
-  const btn = document.getElementById('btn-' + exId);
-  const isOpen = panel.classList.contains('open');
+  var panel = document.getElementById('log-' + exId);
+  var btn = document.getElementById('btn-' + exId);
+  var isOpen = panel.classList.contains('open');
   panel.classList.toggle('open', !isOpen);
   btn.classList.toggle('open', !isOpen);
   btn.textContent = isOpen ? 'Log' : 'Close';
 }
-
+ 
 function autoSave(exId, setIndex) {
-  const w = document.getElementById('w_' + exId + '_' + setIndex);
-  const r = document.getElementById('r_' + exId + '_' + setIndex);
-  const weight = w && w.value ? parseFloat(w.value) : null;
-  const reps = r && r.value ? parseInt(r.value) : null;
+  var w = document.getElementById('w_' + exId + '_' + setIndex);
+  var r = document.getElementById('r_' + exId + '_' + setIndex);
+  var weight = w && w.value ? parseFloat(w.value) : null;
+  var reps = r && r.value ? parseInt(r.value) : null;
   if (weight !== null || reps !== null) {
     saveLog(exId, setIndex, weight, reps);
     flashConfirm(exId);
   }
 }
-
+ 
 function flashConfirm(exId) {
-  const el = document.getElementById('conf-' + exId);
+  var el = document.getElementById('conf-' + exId);
   if (!el) return;
   el.style.opacity = '1';
   clearTimeout(el._t);
   el._t = setTimeout(function() { el.style.opacity = '0'; }, 1800);
 }
-
+ 
+// TRENDS
+var trendsChart = null;
+ 
+function populateTrendsDropdown() {
+  var sel = document.getElementById('trends-exercise-select');
+  ALL_EXERCISES.forEach(function(ex) {
+    var opt = document.createElement('option');
+    opt.value = ex.id;
+    opt.textContent = ex.name;
+    sel.appendChild(opt);
+  });
+}
+ 
+function renderTrends() {
+  var exId = document.getElementById('trends-exercise-select').value;
+  var setMode = document.getElementById('trends-set-select').value;
+  if (!exId) return;
+ 
+  var labels = [];
+  var dataPoints = [];
+ 
+  for (var w = -11; w <= 0; w++) {
+    var d = new Date(Date.now() + w * 7 * 86400000);
+    var startOfYear = new Date(d.getFullYear(), 0, 1);
+    var weekNum = Math.ceil(((d - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
+    var key = d.getFullYear() + '-W' + String(weekNum).padStart(2, '0');
+    var stored = null;
+    try { stored = JSON.parse(localStorage.getItem('log_' + key + '_' + exId) || 'null'); } catch(e) {}
+ 
+    labels.push('W' + String(weekNum).padStart(2, '0'));
+ 
+    if (!stored || !stored.length) { dataPoints.push(null); continue; }
+    var valid = stored.filter(function(s) { return s && s.weight; });
+    if (!valid.length) { dataPoints.push(null); continue; }
+ 
+    var val = null;
+    if (setMode === 'max') {
+      val = Math.max.apply(null, valid.map(function(s) { return s.weight; }));
+    } else {
+      var idx = parseInt(setMode);
+      val = stored[idx] && stored[idx].weight ? stored[idx].weight : null;
+    }
+    dataPoints.push(val);
+  }
+ 
+  var hasData = dataPoints.some(function(d) { return d !== null; });
+  var noDataEl = document.getElementById('trends-no-data');
+  var canvas = document.getElementById('trends-chart');
+ 
+  if (!hasData) {
+    canvas.style.display = 'none';
+    noDataEl.style.display = 'block';
+    if (trendsChart) { trendsChart.destroy(); trendsChart = null; }
+    return;
+  }
+ 
+  canvas.style.display = 'block';
+  noDataEl.style.display = 'none';
+ 
+  var exObj = ALL_EXERCISES.find(function(e) { return e.id === exId; });
+ 
+  if (trendsChart) trendsChart.destroy();
+ 
+  trendsChart = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: (exObj ? exObj.name : exId) + ' (lbs)',
+        data: dataPoints,
+        borderColor: '#b07d3a',
+        backgroundColor: 'rgba(176,125,58,0.08)',
+        borderWidth: 2,
+        pointBackgroundColor: '#b07d3a',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        spanGaps: true,
+        tension: 0.3,
+        fill: true,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) { return ctx.parsed.y !== null ? ctx.parsed.y + ' lbs' : 'No data'; }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: false,
+          grid: { color: '#f0ebe4' },
+          ticks: { font: { family: 'DM Sans', size: 11 }, color: '#999', callback: function(v) { return v + ' lbs'; } }
+        },
+        x: {
+          grid: { display: false },
+          ticks: { font: { family: 'DM Sans', size: 11 }, color: '#999' }
+        }
+      }
+    }
+  });
+}
+ 
+// EXPORT
+function getAllData() {
+  var rows = [];
+  for (var i = 0; i < localStorage.length; i++) {
+    var key = localStorage.key(i);
+    if (!key || !key.startsWith('log_')) continue;
+    var parts = key.split('_');
+    if (parts.length < 3) continue;
+    var weekKey = parts[1];
+    var exId = parts.slice(2).join('_');
+    var ex = ALL_EXERCISES.find(function(e) { return e.id === exId; });
+    var exName = ex ? ex.name : exId;
+    try {
+      var sets = JSON.parse(localStorage.getItem(key) || '[]');
+      sets.forEach(function(set, idx) {
+        if (set && (set.weight || set.reps)) {
+          rows.push({ week: weekKey, exercise: exName, set: idx + 1, weight: set.weight || '', reps: set.reps || '' });
+        }
+      });
+    } catch(e) {}
+  }
+  rows.sort(function(a, b) {
+    if (a.week !== b.week) return a.week < b.week ? -1 : 1;
+    if (a.exercise !== b.exercise) return a.exercise < b.exercise ? -1 : 1;
+    return a.set - b.set;
+  });
+  return rows;
+}
+ 
+function exportCSV() {
+  var rows = getAllData();
+  if (!rows.length) { alert('No data logged yet.'); return; }
+  var csv = 'Week,Exercise,Set,Weight (lbs),Reps\n';
+  rows.forEach(function(r) {
+    csv += [r.week, '"' + r.exercise + '"', r.set, r.weight, r.reps].join(',') + '\n';
+  });
+  downloadFile('training_log.csv', csv, 'text/csv');
+}
+ 
+function exportJSON() {
+  var rows = getAllData();
+  if (!rows.length) { alert('No data logged yet.'); return; }
+  downloadFile('training_log.json', JSON.stringify(rows, null, 2), 'application/json');
+}
+ 
+function previewData() {
+  var rows = getAllData();
+  var pre = document.getElementById('export-preview');
+  if (!rows.length) { pre.style.display = 'block'; pre.textContent = 'No data logged yet.'; return; }
+  var lines = ['Week       Exercise                      Set  Weight  Reps', '─'.repeat(58)];
+  rows.forEach(function(r) {
+    lines.push(
+      r.week.padEnd(11) +
+      r.exercise.substring(0, 30).padEnd(32) +
+      String(r.set).padEnd(5) +
+      String(r.weight || '—').padEnd(8) +
+      (r.reps || '—')
+    );
+  });
+  pre.style.display = 'block';
+  pre.textContent = lines.join('\n');
+}
+ 
+function downloadFile(filename, content, type) {
+  var blob = new Blob([content], { type: type });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+ 
+// TABS
 function showTab(day, btn) {
   document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
   document.getElementById('panel-' + day).classList.add('active');
   btn.classList.add('active');
+  if (day === 'trends') renderTrends();
 }
-
+ 
+// INIT
 ['mon','tue','thu','sat'].forEach(renderDay);
+populateTrendsDropdown();
 </script>
 </body>
 </html>
